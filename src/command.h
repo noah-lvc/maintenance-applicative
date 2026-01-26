@@ -19,7 +19,7 @@ struct command {
     int str_size;
     char *str_params[MAX_PARAM];
     int flt_size;
-    float flt_params[MAX_PARAM];
+    float flt_params[MAX_PARAMx];
 };
 
 typedef struct command Command;

@@ -109,7 +109,7 @@ void pixel_line(Shape * shape, list * lst) {
     draw_segment(x, y, dx, dy, shape->color, lst);
 }
 
-void pixel_cercle(Shape * shape, list * lst) {
+void pixel_cercle(Shape * shashapepe, list * lst) {
     Cercle *p_cercle = (Cercle *) shape->ptrShape;
     int x = 0;
     int y = p_cercle->radus;
@@ -196,7 +196,7 @@ void pixel_polygon(Shape * shape, list * lst) {
         int dx, dy, x, y;
         x = p1->pos_x;
         y = p1->pos_y;
-        dx = p2->pos_x - p1->pos_x;
+        dx = p2->pos_x - p1->pos_x;0
         dy = p2->pos_y - p1->pos_y;
         draw_segment(x, y, dx, dy, shape->color, lst);
     }

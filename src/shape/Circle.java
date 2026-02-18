@@ -1,6 +1,4 @@
 package shape;
-import java.util.*;
-
 /**
  * Class Circle
  *

@@ -1,7 +1,5 @@
 package shape;
 
-import java.util.*;
-
 /**
  * Class Point
  *

@@ -1,9 +1,4 @@
 package shape;
-import shape.IdCounter;
-import shape.ShapeType;
-
-import java.awt.*;
-import java.util.*;
 /**
  * Class Rectangle
  *

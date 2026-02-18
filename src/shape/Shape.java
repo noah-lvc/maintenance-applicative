@@ -16,9 +16,6 @@ package shape;
  * Fournit également un toString() générique.
  */
 
-import shape.ShapeType;
-
-import java.util.*;
 abstract public class Shape  {
 
    private int id;

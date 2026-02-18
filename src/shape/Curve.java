@@ -1,5 +1,4 @@
 package shape;
-import java.util.*;
 
 /**
  * Class Curve

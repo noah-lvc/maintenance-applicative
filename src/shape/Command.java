@@ -1,0 +1,416 @@
+package shape;
+import java.util.ArrayList;
+import java.util.Scanner;
+
+public class Command {
+    private String name;
+    private ArrayList<Integer> intParams;
+    private ArrayList<String> strParams;
+    private static final int MAX_PARAM = 30;
+
+    public Command() {
+        this.name = "";
+        this.intParams = new ArrayList<>();
+        this.strParams = new ArrayList<>();
+    }
+
+    public void clear_commande() {
+        this.name = "";
+        this.intParams.clear();
+        this.strParams.clear();
+    }
+
+    public void addIntParam(int p) {
+        if (intParams.size() < MAX_PARAM) {
+            intParams.add(p);
+        }
+    }
+
+    public void addStrParam(String s) {
+        if (strParams.size() < MAX_PARAM) {
+            strParams.add(s);
+        }
+    }
+
+    public void readFromStdin() {
+        Scanner scanner = new Scanner(System.in);
+        System.out.print("~> ");
+        String line = scanner.nextLine().trim().toLowerCase();
+
+        if (line.isEmpty()) return;
+
+        String[] tokens = line.split("\\s+");
+        for (String token : tokens) {
+            if (token.matches("-?\\d+")) {
+                intParams.add(Integer.parseInt(token));
+            } else {
+                strParams.add(token);
+            }
+        }
+
+        if (!strParams.isEmpty()) {
+            name = strParams.get(0);
+        }
+    }
+
+    public void debug() {
+        System.out.println("\n --- ");
+        System.out.println("str:");
+        for (String s : strParams) {
+            System.out.println("<" + s + ">");
+        }
+        System.out.println("int:");
+        for (int i : intParams) {
+            System.out.println("<" + i + ">");
+        }
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public ArrayList<String> getStrParams() {
+        return strParams;
+    }
+
+    public ArrayList<Integer> getIntParams() {
+        return intParams;
+    }
+
+    public void printHelp() {
+        System.out.println("\t**************************************************");
+        System.out.println("\t****         VECTOR TEXT-BASED EDITOR         ****");
+        System.out.println("\t**************************************************");
+        System.out.println("\t==== Control ====");
+        System.out.println("\tclear : clear screen ");
+        System.out.println("\texit : exit the program ");
+        System.out.println("\thelp : print this help ");
+        System.out.println("\tplot : draw screen");
+        System.out.println("\t==== Draw shapes ====");
+        System.out.println("\tpoint px py : create point at position (px, py)");
+        System.out.println("\tline x1 y1 x2 y2 : draw line from (x1, y1) to (x2, y2)");
+        System.out.println("\tsquare x1 y1 l : draw square at (x1, y1) with side length l");
+        System.out.println("\trectangle x1 y1 w h : draw rectangle at (x1, y1) with width w and height h");
+        System.out.println("\tcircle x y r : draw circle at (x, y) with radius r");
+        System.out.println("\tpolygon x1 y1 x2 y2 ... : draw polygon with vertices (x1, y1), (x2, y2), ...");
+        System.out.println("\tcurve x1 y1 x2 y2 x3 y3 x4 y4 : draw Bezier curve with the given control points");
+        System.out.println("\t==== Draw manager ====");
+        System.out.println("\tlist {layers, areas, shapes} example :  list layers");
+        System.out.println("\tselect {area, layer} {id}");
+        System.out.println("\tdelete {area, layer, shape} {id}");
+        System.out.println("\tnew {area, layer}");
+        System.out.println("\t==== Set ====");
+        System.out.println("\tset char {border, background} ascii_code");
+        System.out.println("\tset layer {visible, invisible} {id}");
+    }
+
+    public void read_exec_command(App app, Area area, Layer layer, Shape shape) {
+        Point p1;
+        Point p2;
+        Point p3;
+        Point p4;
+
+        boolean shouldDrawCanvas = true; // Flag to control canvas drawing
+
+        switch (getName()) {
+            case "exit":
+                if (this.strParams.size() == 1) {
+                    ErrorMessage.EXIT.printMessage();
+                    System.exit(0);
+                } else {
+                    ErrorMessage.INVALID_PARAMETERS.printMessage();
+                    shouldDrawCanvas = false; // Prevent canvas drawing
+                }
+                break;
+
+            case "clear":
+                if (this.strParams.size() == 1) {
+                    app.currentArea.clearArea();
+                    System.out.flush();
+                } else {
+                    ErrorMessage.INVALID_PARAMETERS.printMessage();
+                    shouldDrawCanvas = false; // Prevent canvas drawing
+                }
+                break;
+
+            case "help":
+                printHelp();
+                shouldDrawCanvas = false; // Prevent canvas drawing
+                break;
+
+            case "plot":
+                if (this.strParams.size() == 1) { // Ensure no additional parameters are provided
+                    app.currentArea.clearArea(); // Reset the canvas with the updated background character
+                    app.currentArea.draw(); // Redraw the canvas
+                    System.out.println("Canvas redrawn.");
+                } else {
+                    ErrorMessage.INVALID_PARAMETERS.printMessage();
+                    System.out.println("Expected format: plot");
+                }
+                shouldDrawCanvas = false;
+                break;
+
+            case "point":
+                if (this.intParams.size() == 2) { // Ensure correct parameter count
+                    p1 = new Point(this.intParams.get(0), this.intParams.get(1));
+                    app.currentLayer.addShape(p1);
+                    area.drawLine(p1, p1); // Draw point on canvas
+                } else {
+                    ErrorMessage.INVALID_PARAMETERS.printMessage();
+                    System.out.println("Expected format: point {x} {y}");
+                    shouldDrawCanvas = false;
+                }
+                break;
+
+            case "line":
+                if (this.intParams.size() == 4) { // Ensure correct parameter count
+                    p1 = new Point(this.intParams.get(0), this.intParams.get(1));
+                    p2 = new Point(this.intParams.get(2), this.intParams.get(3));
+                    Line line = new Line(p1, p2);
+                    app.currentLayer.addShape(line);
+                    area.drawLine(p1, p2); // Draw line on canvas
+                } else {
+                    ErrorMessage.INVALID_PARAMETERS.printMessage();
+                    System.out.println("Expected format: line {x1} {y1} {x2} {y2}");
+                    shouldDrawCanvas = false;
+                }
+                break;
+
+            case "square":
+                if (this.intParams.size() == 3) { // Ensure correct parameter count
+                    p1 = new Point(this.intParams.get(0), this.intParams.get(1));
+                    Square square = new Square(p1, this.intParams.get(2));
+                    app.currentLayer.addShape(square);
+                    area.drawSquare(p1, this.intParams.get(2)); // Draw square on canvas
+                } else {
+                    ErrorMessage.INVALID_PARAMETERS.printMessage();
+                    System.out.println("Expected format: square {x} {y} {length}");
+                    shouldDrawCanvas = false;
+                }
+                break;
+
+            case "rectangle":
+                if (this.intParams.size() == 4) { // Ensure correct parameter count
+                    p1 = new Point(this.intParams.get(0), this.intParams.get(1));
+                    Rectangle rectangle = new Rectangle(p1, this.intParams.get(2), this.intParams.get(3));
+                    app.currentLayer.addShape(rectangle);
+                    area.drawRectangle(p1, this.intParams.get(2), this.intParams.get(3)); // Draw rectangle on canvas
+                } else {
+                    ErrorMessage.INVALID_PARAMETERS.printMessage();
+                    System.out.println("Expected format: rectangle {x} {y} {width} {height}");
+                    shouldDrawCanvas = false;
+                }
+                break;
+
+            case "circle":
+                if (this.intParams.size() == 3) { // Ensure correct parameter count
+                    p1 = new Point(this.intParams.get(0), this.intParams.get(1));
+                    Circle circle = new Circle(p1, this.intParams.get(2));
+                    app.currentLayer.addShape(circle);
+                    area.drawCircle(p1, this.intParams.get(2)); // Draw circle on canvas
+                } else {
+                    ErrorMessage.INVALID_PARAMETERS.printMessage();
+                    System.out.println("Expected format: circle {x} {y} {radius}");
+                    shouldDrawCanvas = false;
+                }
+                break;
+
+            case "curve":
+                if (this.intParams.size() == 8) { // Ensure correct parameter count
+                    p1 = new Point(this.intParams.get(0), this.intParams.get(1));
+                    p2 = new Point(this.intParams.get(2), this.intParams.get(3));
+                    p3 = new Point(this.intParams.get(4), this.intParams.get(5));
+                    p4 = new Point(this.intParams.get(6), this.intParams.get(7));
+                    Curve curve = new Curve(p1, p2, p3, p4);
+                    app.currentLayer.addShape(curve);
+                    area.drawCurve(p1, p2, p3, p4); // Draw curve on canvas
+                } else {
+                    ErrorMessage.INVALID_PARAMETERS.printMessage();
+                    System.out.println("Expected format: curve {x1} {y1} {x2} {y2} {x3} {y3} {x4} {y4}");
+                    shouldDrawCanvas = false;
+                }
+                break;
+
+            case "polygon":
+                if (this.intParams.size() >= 4 && this.intParams.size() % 2 == 0) { // Ensure correct parameter count
+                    ArrayList<Point> points = new ArrayList<>();
+                    for (int i = 0; i < this.intParams.size(); i += 2) {
+                        points.add(new Point(this.intParams.get(i), this.intParams.get(i + 1)));
+                    }
+                    Polygon polygon = new Polygon(points);
+                    app.currentLayer.addShape(polygon);
+                    area.drawPolygon(points); // Draw polygon on canvas
+                } else {
+                    ErrorMessage.INVALID_PARAMETERS.printMessage();
+                    System.out.println("Expected format: polygon {x1} {y1} {x2} {y2} ...");
+                    shouldDrawCanvas = false;
+                }
+                break;
+
+            case "list":
+                if (this.strParams.size() == 2) {
+                    String target = this.strParams.get(1);
+                    switch (target) {
+                        case "layers":
+                            for (Layer l : app.currentArea.getLstLayers()) {
+                                System.out.println("Layer ID: " + l.getId() + ", Name: " + l.getName());
+                            }
+                            break;
+                        case "areas":
+                            for (Area a : app.getAreas()) {
+                                System.out.println("Area ID: " + a.getId() + ", Name: " + a.getName());
+                            }
+                            break;
+                        case "shapes":
+                            for (Shape s : app.currentLayer.getShapes()) {
+                                System.out.println("Shape ID: " + s.getId() + ", Type: " + s.getClass().getSimpleName());
+                            }
+                            break;
+                        default:
+                            ErrorMessage.UNKNOWN_COMMAND.printMessage();
+                    }
+                } else {
+                    ErrorMessage.INVALID_PARAMETERS.printMessage();
+                }
+                shouldDrawCanvas = false;
+                break;
+
+            case "select":
+                if (this.strParams.size() == 2 && this.intParams.size() == 1) { // Ensure correct parameter counts
+                    String target = this.strParams.get(1);
+                    int id = this.intParams.get(0); // Correctly access the ID from intParams
+                    switch (target) {
+                        case "area":
+                            boolean areaFound = false;
+                            for (Area a : app.getAreas()) {
+                                if (a.getId() == id) {
+                                    app.currentArea = a;
+                                    System.out.println("Selected Area ID: " + id);
+                                    areaFound = true;
+                                    break;
+                                }
+                            }
+                            if (!areaFound) {
+                                ErrorMessage.UNKNOWN_ID.printMessage();
+                            }
+                            break;
+                        case "layer":
+                            boolean layerFound = false;
+                            for (Layer l : app.currentArea.getLstLayers()) {
+                                if (l.getId() == id) {
+                                    app.currentLayer = l;
+                                    System.out.println("Selected Layer ID: " + id);
+                                    layerFound = true;
+                                    break;
+                                }
+                            }
+                            if (!layerFound) {
+                                ErrorMessage.UNKNOWN_ID.printMessage();
+                            }
+                            break;
+                        default:
+                            ErrorMessage.UNKNOWN_COMMAND.printMessage();
+                    }
+                } else {
+                    ErrorMessage.INVALID_PARAMETERS.printMessage();
+                    System.out.println("Expected format: select {area, layer} {id}");
+                }
+                shouldDrawCanvas = false;
+                break;
+
+            case "delete":
+                if (this.strParams.size() == 2 && this.intParams.size() == 1) { // Ensure correct parameter count
+                    String target = this.strParams.get(1);
+                    int id = this.intParams.get(0); // Correctly access the ID from intParams
+                    switch (target) {
+                        case "area":
+                            app.getAreas().removeIf(a -> a.getId() == id);
+                            System.out.println("Deleted Area ID: " + id);
+                            break;
+                        case "layer":
+                            app.currentArea.getLstLayers().removeIf(l -> l.getId() == id);
+                            app.currentArea.clearArea();
+                            app.currentArea.draw();
+                            System.out.println("Deleted Layer ID: " + id);
+                            break;
+                        case "shape":
+                            app.currentLayer.getShapes().removeIf(s -> s.getId() == id);
+                            System.out.println("Deleted Shape ID: " + id);
+                            break;
+                        default:
+                            ErrorMessage.UNKNOWN_COMMAND.printMessage();
+                    }
+                } else {
+                    ErrorMessage.INVALID_PARAMETERS.printMessage();
+                    System.out.println("Expected format: delete {area, layer, shape} {id}");
+                }
+                shouldDrawCanvas = false;
+                break;
+
+            case "new":
+                if (this.strParams.size() == 2) {
+                    String target = this.strParams.get(1);
+                    switch (target) {
+                        case "area":
+                            Area newArea = new Area(40, 40, IdCounter.getInstance().getNextId(), "new_area");
+                            app.addAreaToList(newArea);
+                            System.out.println("Created new Area ID: " + newArea.getId());
+                            break;
+                        case "layer":
+                            Layer newLayer = new Layer("new_layer", IdCounter.getInstance().getNextId());
+                            app.currentArea.addLayer(newLayer);
+                            System.out.println("Created new Layer ID: " + newLayer.getId());
+                            break;
+                        default:
+                            ErrorMessage.UNKNOWN_COMMAND.printMessage();
+                    }
+                } else {
+                    ErrorMessage.INVALID_PARAMETERS.printMessage();
+                }
+                shouldDrawCanvas = false;
+                break;
+
+            case "set":
+                if (this.strParams.size() == 3 && this.intParams.size() == 1) { // Ensure correct parameter counts
+                    String target = this.strParams.get(2);
+                    int asciiCode = this.intParams.get(0); // Access the ASCII code from intParams
+
+                    // Validate ASCII code for printable characters (32 to 126)
+                    if (asciiCode < 32 || asciiCode > 126) {
+                        ErrorMessage.INVALID_PARAMETERS.printMessage();
+                        System.out.println("ASCII code must be between 32 and 126 for printable characters.");
+                        shouldDrawCanvas = false;
+                        break;
+                    }
+
+                    char newChar = (char) asciiCode; // Convert ASCII code to character
+                    switch (target) {
+                        case "background":
+                            area.setEmptyChar(newChar);
+                            System.out.println("Background character set to: " + newChar);
+                            break;
+                        case "border":
+                            area.setFullChar(newChar);
+                            System.out.println("Border character set to: " + newChar);
+                            break;
+                        default:
+                            ErrorMessage.UNKNOWN_COMMAND.printMessage();
+                    }
+                } else {
+                    ErrorMessage.INVALID_PARAMETERS.printMessage();
+                    System.out.println("Expected format: set char {background, border} {ascii_code}");
+                }
+                shouldDrawCanvas = false;
+                break;
+
+            default:
+                System.out.println("Commande inconnue"); // Simplified unknown command handling
+                shouldDrawCanvas = false; // Prevent canvas drawing
+                break;
+        }
+
+        if (shouldDrawCanvas) {
+            app.currentArea.draw(); // Ensure canvas is displayed only when needed
+        }
+    }
+}

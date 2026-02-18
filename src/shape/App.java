@@ -1,7 +1,6 @@
 package shape;
 
 import java.util.ArrayList;
-import java.util.Scanner;
 
 public class App {
     private ArrayList<Area> areas;
@@ -23,7 +22,6 @@ public class App {
         currentArea.addLayer(currentLayer);
         currentArea.draw();
 
-        Scanner scanner = new Scanner(System.in);
         while (true) {
             command = new Command();
             command.clear_commande();

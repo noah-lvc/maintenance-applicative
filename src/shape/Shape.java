@@ -19,18 +19,12 @@ package shape;
 abstract public class Shape  {
 
    private int id;
-    private ShapeType type;
     private String color;
-    private float thickness;
-    private float rotation;
     private boolean fill;
 
     public Shape(int id, ShapeType type) {
         this.id = id;
-        this.type = type;
         this.color = "BLACK";
-        this.thickness = 1.0f;
-        this.rotation = 0.0f;
         this.fill = false;
     }
 

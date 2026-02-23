@@ -2,36 +2,64 @@ package shape;
 import java.util.ArrayList;
 import java.util.Scanner;
 
+/**
+ * La classe Command est responsable de l'analyse (parsing) et de l'exécution
+ * des instructions saisies par l'utilisateur.
+ * Elle sépare les paramètres textuels des paramètres numériques pour faciliter 
+ * le traitement des différentes commandes de dessin et de gestion.
+ */
 public class Command {
+    /** Le nom de la commande (premier mot saisi). */
     private String name;
+    /** Liste des paramètres entiers extraits de la saisie. */
     private ArrayList<Integer> intParams;
+    /** Liste des paramètres textuels extraits de la saisie. */
     private ArrayList<String> strParams;
+    /** Limite maximale de paramètres autorisés par liste. */
     private static final int MAX_PARAM = 30;
 
+    /**
+     * Constructeur par défaut initialisant les structures de paramètres.
+     */
     public Command() {
         this.name = "";
         this.intParams = new ArrayList<>();
         this.strParams = new ArrayList<>();
     }
 
+    /**
+     * Réinitialise le nom et les listes de paramètres de la commande.
+     */
     public void clear_commande() {
         this.name = "";
         this.intParams.clear();
         this.strParams.clear();
     }
 
+    /**
+     * Ajoute un paramètre entier à la liste si la limite n'est pas atteinte.
+     * @param p L'entier à ajouter.
+     */
     public void addIntParam(int p) {
         if (intParams.size() < MAX_PARAM) {
             intParams.add(p);
         }
     }
 
+    /**
+     * Ajoute un paramètre textuel à la liste si la limite n'est pas atteinte.
+     * @param s La chaîne de caractères à ajouter.
+     */
     public void addStrParam(String s) {
         if (strParams.size() < MAX_PARAM) {
             strParams.add(s);
         }
     }
 
+    /**
+     * Lit une ligne depuis l'entrée standard, la découpe en jetons (tokens)
+     * et les répartit entre intParams et strParams selon leur nature.
+     */
     public void readFromStdin() {
         Scanner scanner = new Scanner(System.in);
         System.out.print("~> ");
@@ -57,6 +85,9 @@ public class Command {
         scanner.close();
     }
 
+    /**
+     * Affiche l'état interne de la commande (nom et paramètres) à des fins de débogage.
+     */
     public void debug() {
         System.out.println("\n --- ");
         System.out.println("str:");
@@ -69,18 +100,24 @@ public class Command {
         }
     }
 
+    /** @return Le nom de la commande. */
     public String getName() {
         return name;
     }
 
+    /** @return La liste des paramètres textuels. */
     public ArrayList<String> getStrParams() {
         return strParams;
     }
 
+    /** @return La liste des paramètres entiers. */
     public ArrayList<Integer> getIntParams() {
         return intParams;
     }
 
+    /**
+     * Affiche le menu d'aide listant toutes les commandes disponibles et leurs formats.
+     */
     public void printHelp() {
         System.out.println("\t**************************************************");
         System.out.println("\t****         VECTOR TEXT-BASED EDITOR         ****");
@@ -108,6 +145,14 @@ public class Command {
         System.out.println("\tset layer {visible, invisible} {id}");
     }
 
+    /**
+     * Analyse le nom de la commande et l'exécute en utilisant les paramètres fournis.
+     * Cette méthode interagit directement avec l'instance de l'application et la zone active.
+     * * @param app L'instance de l'application.
+     * @param area La zone de dessin courante.
+     * @param layer Le calque courant.
+     * @param shape La forme courante.
+     */
     public void read_exec_command(App app, Area area, Layer layer, Shape shape) {
         Point p1;
         Point p2;

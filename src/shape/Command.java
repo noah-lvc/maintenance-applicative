@@ -65,10 +65,8 @@ public class Command {
         System.out.print("~> ");
         String line = scanner.nextLine().trim().toLowerCase();
 
-        if (line.isEmpty()) {
-            scanner.close();
-            return;
-        }
+        if (line.isEmpty()) return;
+        
 
         String[] tokens = line.split("\\s+");
         for (String token : tokens) {
@@ -82,7 +80,6 @@ public class Command {
         if (!strParams.isEmpty()) {
             name = strParams.get(0);
         }
-        scanner.close();
     }
 
     /**

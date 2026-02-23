@@ -4,90 +4,97 @@ package shape;
  * Class Shape
  *
  * <<abstract>>
- * 
- * Classe de base abstraite pour toutes les formes géométriques.
- * Définit les propriétés communes :
- *  - id : identifiant unique
- *  - fill : si la forme est remplie
- *  - thickness : épaisseur du contour
- *  - rotation : angle de rotation
- * 
- * Fournit une méthode abstraite draw() que toutes les sous-classes doivent implémenter.
- * Fournit également un toString() générique.
+ * * Classe de base abstraite pour toutes les formes géométriques du système.
+ * Elle définit les propriétés communes à tous les objets graphiques tels que 
+ * l'identifiant unique, la couleur et le statut de remplissage.
  */
-
 abstract public class Shape  {
 
+   /** Identifiant unique de la forme. */
    private int id;
-    private String color;
-    private boolean fill;
+    
+   /** Couleur de la forme (par défaut "BLACK"). */
+   private String color;
+   
+   /** Indique si la forme doit être remplie ou non. */
+   private boolean fill;
 
+   /**
+     * Constructeur de la classe Shape.
+     * @param id L'identifiant unique généré pour cette forme.
+     * @param type Le type de forme (issu de l'énumération ShapeType).
+     */
     public Shape(int id, ShapeType type) {
         this.id = id;
         this.color = "BLACK";
         this.fill = false;
     }
 
+    /**
+     * Méthode abstraite forçant chaque sous-classe à définir sa propre 
+     * logique de rendu sur une zone de dessin.
+     * @param area La zone de dessin (Area) où la forme sera tracée.
+     */
     public abstract void draw(Area area);
 
-
+    /**
+     * Méthode abstraite retournant les détails techniques de la forme.
+     * @return Une chaîne de caractères décrivant les propriétés spécifiques de la forme.
+     */
     public abstract String print();
 
     /**
-     * Set the value of id
-     * @param newVar the new value of id
+     * Définit la valeur de l'identifiant.
+     * @param newVar La nouvelle valeur de l'id.
      */
     public void setId(int newVar) {
         id = newVar;
     }
 
     /**
-     * Get the value of id
-     * @return the value of id
+     * Récupère la valeur de l'identifiant.
+     * @return L'id actuel de la forme.
      */
     public int getId() {
         return id;
     }
 
     /**
-     * Set the value of fill
-     * @param newVar the new value of fill
+     * Définit si la forme doit être remplie.
+     * @param newVar Vrai pour remplir la forme, faux pour n'avoir que le contour.
      */
     public void setFill(boolean newVar) {
         fill = newVar;
     }
 
     /**
-     * Get the value of fill
-     * @return the value of fill
+     * Récupère le statut de remplissage.
+     * @return Vrai si la forme est remplie, faux sinon.
      */
     public boolean getFill() {
         return fill;
     }
 
     /**
-     * Set the value of color
-     * @param newVar the new value of color
+     * Définit la couleur de la forme.
+     * @param newVar Le nom de la couleur.
      */
     public void setColor(String newVar) {
         color = newVar;
     }
 
     /**
-     * Get the value of color
-     * @return the value of color
+     * Récupère la couleur de la forme.
+     * @return Le nom de la couleur actuelle.
      */
     public String getColor() {
         return color;
     }
 
-  //
-  // Other methods
-  //
-
   /**
-   * @return String
-   */
+     * Retourne une description générique de la forme.
+     * @return Une chaîne de caractères "Unknown shape".
+     */
   public String toString(){
 
     return "Unknown shape";

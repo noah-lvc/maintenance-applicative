@@ -1,16 +1,35 @@
 package shape;
 import java.util.ArrayList;
 
+/**
+ * Représente la zone de dessin (canevas) composée de pixels (caractères).
+ * Cette classe gère le rendu des différentes formes géométriques sur une grille 2D.
+ */
 public class Area {
+    /** Largeur de la zone de dessin. */
     private int width;
+    /** Hauteur de la zone de dessin. */
     private int height;
+    /** Identifiant unique de la zone. */
     private int id;
+    /** Nom de la zone. */
     private String name;
+    /** Matrice de caractères représentant la grille de pixels. */
     private char[][] area;
+    /** Liste des calques contenus dans cette zone. */
     private ArrayList<Layer> layers;
+    /** Caractère utilisé pour représenter un pixel vide. */
     private char emptyChar;
+    /** Caractère utilisé pour représenter un pixel rempli. */
     private char fullChar;
 
+    /**
+     * Constructeur de la classe Area.
+     * @param width Largeur de la grille.
+     * @param height Hauteur de la grille.
+     * @param id Identifiant de la zone.
+     * @param name Nom de la zone.
+     */
     public Area(int width, int height, int id, String name) {
         this.width = width;
         this.height = height;
@@ -23,6 +42,9 @@ public class Area {
         clearArea();
     }
 
+    /**
+     * Réinitialise la grille en remplissant chaque pixel avec le caractère vide.
+     */
     public void clearArea() {
         for (int i = 0; i < height; i++) {
             for (int j = 0; j < width; j++) {
@@ -31,10 +53,18 @@ public class Area {
         }
     }
 
+    /**
+     * Ajoute un calque à la zone de dessin.
+     * @param layer Le calque à ajouter.
+     */
     public void addLayer(Layer layer) {
         layers.add(layer);
     }
 
+    /**
+     * Ajoute un calque à la zone de dessin.
+     * @param layer Le calque à ajouter.
+     */
     public void draw() {
         clearArea();
 
@@ -55,6 +85,11 @@ public class Area {
         }
     }
 
+    /**
+     * Dessine une ligne entre deux points en utilisant l'algorithme de Bresenham.
+     * @param p1 Point de départ.
+     * @param p2 Point d'arrivée.
+     */
     public void drawLine(Point p1, Point p2) {
         int x1 = p1.getX(), y1 = p1.getY();
         int x2 = p2.getX(), y2 = p2.getY();
@@ -80,6 +115,11 @@ public class Area {
         }
     }
 
+    /**
+     * Dessine les contours d'un carré.
+     * @param p1 Coin supérieur gauche.
+     * @param length Longueur du côté.
+     */
     public void drawSquare(Point p1, int length) {
         int x = p1.getX(), y = p1.getY();
         for (int i = 0; i < length; i++) {
@@ -94,6 +134,12 @@ public class Area {
         }
     }
 
+    /**
+     * Dessine les contours d'un rectangle.
+     * @param p1 Coin supérieur gauche.
+     * @param width Largeur du rectangle.
+     * @param height Hauteur du rectangle.
+     */
     public void drawRectangle(Point p1, int width, int height) {
         int x = p1.getX(), y = p1.getY();
         for (int i = 0; i < height; i++) {
@@ -108,6 +154,11 @@ public class Area {
         }
     }
 
+    /**
+     * Dessine un cercle en utilisant l'algorithme de tracé de cercle d'Andres (Midpoint).
+     * @param center Point central du cercle.
+     * @param radius Rayon du cercle.
+     */
     public void drawCircle(Point center, int radius) {
         int cx = center.getX(), cy = center.getY();
         int x = 0, y = radius;
@@ -134,12 +185,24 @@ public class Area {
         }
     }
 
+    /**
+     * Allume un pixel spécifique pour le tracé d'un cercle si les coordonnées sont valides.
+     * @param x Coordonnée X.
+     * @param y Coordonnée Y.
+     */
     private void drawCirclePixel(int x, int y) {
         if (x >= 0 && x < width && y >= 0 && y < height) {
             area[y][x] = fullChar;
         }
     }
 
+    /**
+     * Dessine une courbe de Bézier cubique définie par quatre points de contrôle.
+     * @param p1 Point de départ.
+     * @param p2 Premier point de contrôle.
+     * @param p3 Deuxième point de contrôle.
+     * @param p4 Point d'arrivée.
+     */
     public void drawCurve(Point p1, Point p2, Point p3, Point p4) {
         int steps = 100; // Number of steps for curve approximation
         for (int i = 0; i <= steps; i++) {
@@ -156,6 +219,11 @@ public class Area {
         }
     }
 
+    /**
+     * Dessine un point unique sur la grille à partir d'un objet Point.
+     * Vérifie si les coordonnées sont à l'intérieur des limites de la zone.
+     * @param p Le point contenant les coordonnées x et y.
+     */
     public void drawPoint(Point p) {
         int x = p.getX();
         int y = p.getY();
@@ -165,6 +233,10 @@ public class Area {
         }
     }
 
+    /**
+     * Dessine un polygone en reliant une série de points.
+     * @param points Liste ordonnée des sommets du polygone.
+     */
     public void drawPolygon(ArrayList<Point> points) {
         if (points.size() < 2) return; // Un polygone nécessite au moins deux points
 
@@ -175,62 +247,107 @@ public class Area {
         }
     }
 
+    /**
+     * @return La largeur de la zone.
+     */
     public int getWidth() {
         return width;
     }
 
+    /**
+     * @param width La nouvelle largeur de la zone.
+     */
     public void setWidth(int width) {
         this.width = width;
     }
 
+    /**
+     * @return La hauteur de la zone.
+     */
     public int getHeight() {
         return height;
     }
 
+    /**
+     * @param height La nouvelle hauteur de la zone.
+     */
     public void setHeight(int height) {
         this.height = height;
     }
 
+    /**
+     * @return L'identifiant unique de la zone.
+     */
     public int getId() {
         return id;
     }
 
+    /**
+     * @param id Le nouvel identifiant de la zone.
+     */
     public void setId(int id) {
         this.id = id;
     }
 
+    /**
+     * @return Le nom de la zone.
+     */
     public String getName() {
         return name;
     }
 
+    /**
+     * @param name Le nouveau nom de la zone.
+     */
     public void setName(String name) {
         this.name = name;
     }
 
+    /**
+     * @return La matrice de caractères (pixels) de la zone.
+     */
     public char[][] getArea() {
         return area;
     }
 
+    /**
+     * @param area La nouvelle matrice de caractères à assigner.
+     */
     public void setArea(char[][] area) {
         this.area = area;
     }
 
+    /**
+     * @return La liste des calques de la zone.
+     */
     public ArrayList<Layer> getLstLayers() {
         return layers;
     }
 
+    /**
+     * @return Le caractère actuel représentant le vide.
+     */
     public char getEmptyChar() {
         return emptyChar;
     }
 
+    /**
+     * @param emptyChar Le nouveau caractère pour les pixels vides.
+     */
     public void setEmptyChar(char emptyChar) {
         this.emptyChar = emptyChar;
     }
 
+    /**
+     * @return Le caractère actuel représentant un pixel plein.
+     */
     public char getFullChar() {
         return fullChar;
     }
 
+    /**
+     * @param fullChar Le nouveau caractère pour les pixels pleins.
+     */
     public void setFullChar(char fullChar) {
         this.fullChar = fullChar;
     }

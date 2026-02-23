@@ -1,52 +1,50 @@
 package shape;
+
 /**
- * Class Circle
+ * Classe Circle
  *
- * Représente un cercle géométrique.
- * Hérite de Shape.
- *
- * Propriétés spécifiques :
- *  - radius : rayon du cercle
- *
- * Implémente la méthode draw() pour dessiner le cercle (ici simulation par print).
+ * Représente un cercle géométrique défini par un point central et un rayon.
+ * Cette classe hérite de la classe abstraite Shape.
  */
 public class Circle extends Shape {
 
-  //
-    // Fields
-    //
-
+    /** Le point central du cercle. */
     private Point center;
+    
+    /** Le rayon du cercle. */
     private int radius;
 
-    //
-    // Constructors
-    //
-
+    /**
+     * Constructeur créant un cercle à partir d'un objet Point.
+     * @param center Le point central du cercle.
+     * @param radius Le rayon du cercle.
+     */
     public Circle(Point center, int radius) {
         super(IdCounter.getInstance().getNextId(), ShapeType.CIRCLE);
         this.center = center;
         this.radius = radius;
     }
 
+    /**
+     * Constructeur créant un cercle à partir de coordonnées cartésiennes.
+     * @param px Coordonnée X du centre.
+     * @param py Coordonnée Y du centre.
+     * @param radius Le rayon du cercle.
+     */
     public Circle(int px, int py, int radius) {
         super(IdCounter.getInstance().getNextId(), ShapeType.CIRCLE);
         this.center = new Point(px, py);
         this.radius = radius;
     }
 
-    //
-    // Methods
-    //
-
+    /**
+     * Retourne une représentation textuelle des caractéristiques du cercle.
+     * @return Une chaîne de caractères décrivant le centre et le rayon.
+     */
     @Override
     public String print() {
         return "Circle(center: " + center.print() + ", radius: " + radius + ")";
     }
-
-    //
-    // Accessor methods
-    //
 
     /**
      * Set the value of center
@@ -80,6 +78,10 @@ public class Circle extends Shape {
         return radius;
     }
 
+    /**
+     * Demande à la zone de dessin de tracer ce cercle.
+     * @param area La zone de dessin (Area) où le cercle doit être rendu.
+     */
     public void draw(Area area) {
         area.drawCircle(center, radius);
     }

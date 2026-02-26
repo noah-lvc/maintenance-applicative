@@ -156,7 +156,7 @@ public class Command {
         Point p3;
         Point p4;
 
-        boolean shouldDrawCanvas = true; // Flag to control canvas drawing
+        boolean shouldDrawCanvas = true;
 
         switch (getName()) {
             case "exit":
@@ -165,7 +165,7 @@ public class Command {
                     System.exit(0);
                 } else {
                     ErrorMessage.INVALID_PARAMETERS.printMessage();
-                    shouldDrawCanvas = false; // Prevent canvas drawing
+                    shouldDrawCanvas = false;
                 }
                 break;
 
@@ -175,19 +175,19 @@ public class Command {
                     System.out.flush();
                 } else {
                     ErrorMessage.INVALID_PARAMETERS.printMessage();
-                    shouldDrawCanvas = false; // Prevent canvas drawing
+                    shouldDrawCanvas = false;
                 }
                 break;
 
             case "help":
                 printHelp();
-                shouldDrawCanvas = false; // Prevent canvas drawing
+                shouldDrawCanvas = false;
                 break;
 
             case "plot":
-                if (this.strParams.size() == 1) { // Ensure no additional parameters are provided
-                    app.currentArea.clearArea(); // Reset the canvas with the updated background character
-                    app.currentArea.draw(); // Redraw the canvas
+                if (this.strParams.size() == 1) {
+                    app.currentArea.clearArea();
+                    app.currentArea.draw();
                     System.out.println("Canvas redrawn.");
                 } else {
                     ErrorMessage.INVALID_PARAMETERS.printMessage();
@@ -197,10 +197,10 @@ public class Command {
                 break;
 
             case "point":
-                if (this.intParams.size() == 2) { // Ensure correct parameter count
+                if (this.intParams.size() == 2) {
                     p1 = new Point(this.intParams.get(0), this.intParams.get(1));
                     app.currentLayer.addShape(p1);
-                    area.drawLine(p1, p1); // Draw point on canvas
+                    area.drawLine(p1, p1);
                 } else {
                     ErrorMessage.INVALID_PARAMETERS.printMessage();
                     System.out.println("Expected format: point {x} {y}");
@@ -209,12 +209,12 @@ public class Command {
                 break;
 
             case "line":
-                if (this.intParams.size() == 4) { // Ensure correct parameter count
+                if (this.intParams.size() == 4) {
                     p1 = new Point(this.intParams.get(0), this.intParams.get(1));
                     p2 = new Point(this.intParams.get(2), this.intParams.get(3));
                     Line line = new Line(p1, p2);
                     app.currentLayer.addShape(line);
-                    area.drawLine(p1, p2); // Draw line on canvas
+                    area.drawLine(p1, p2);
                 } else {
                     ErrorMessage.INVALID_PARAMETERS.printMessage();
                     System.out.println("Expected format: line {x1} {y1} {x2} {y2}");
@@ -223,11 +223,11 @@ public class Command {
                 break;
 
             case "square":
-                if (this.intParams.size() == 3) { // Ensure correct parameter count
+                if (this.intParams.size() == 3) {
                     p1 = new Point(this.intParams.get(0), this.intParams.get(1));
                     Square square = new Square(p1, this.intParams.get(2));
                     app.currentLayer.addShape(square);
-                    area.drawSquare(p1, this.intParams.get(2)); // Draw square on canvas
+                    area.drawSquare(p1, this.intParams.get(2));
                 } else {
                     ErrorMessage.INVALID_PARAMETERS.printMessage();
                     System.out.println("Expected format: square {x} {y} {length}");
@@ -236,11 +236,11 @@ public class Command {
                 break;
 
             case "rectangle":
-                if (this.intParams.size() == 4) { // Ensure correct parameter count
+                if (this.intParams.size() == 4) {
                     p1 = new Point(this.intParams.get(0), this.intParams.get(1));
                     Rectangle rectangle = new Rectangle(p1, this.intParams.get(2), this.intParams.get(3));
                     app.currentLayer.addShape(rectangle);
-                    area.drawRectangle(p1, this.intParams.get(2), this.intParams.get(3)); // Draw rectangle on canvas
+                    area.drawRectangle(p1, this.intParams.get(2), this.intParams.get(3));
                 } else {
                     ErrorMessage.INVALID_PARAMETERS.printMessage();
                     System.out.println("Expected format: rectangle {x} {y} {width} {height}");
@@ -249,11 +249,11 @@ public class Command {
                 break;
 
             case "circle":
-                if (this.intParams.size() == 3) { // Ensure correct parameter count
+                if (this.intParams.size() == 3) {
                     p1 = new Point(this.intParams.get(0), this.intParams.get(1));
                     Circle circle = new Circle(p1, this.intParams.get(2));
                     app.currentLayer.addShape(circle);
-                    area.drawCircle(p1, this.intParams.get(2)); // Draw circle on canvas
+                    area.drawCircle(p1, this.intParams.get(2));
                 } else {
                     ErrorMessage.INVALID_PARAMETERS.printMessage();
                     System.out.println("Expected format: circle {x} {y} {radius}");
@@ -262,14 +262,14 @@ public class Command {
                 break;
 
             case "curve":
-                if (this.intParams.size() == 8) { // Ensure correct parameter count
+                if (this.intParams.size() == 8) {
                     p1 = new Point(this.intParams.get(0), this.intParams.get(1));
                     p2 = new Point(this.intParams.get(2), this.intParams.get(3));
                     p3 = new Point(this.intParams.get(4), this.intParams.get(5));
                     p4 = new Point(this.intParams.get(6), this.intParams.get(7));
                     Curve curve = new Curve(p1, p2, p3, p4);
                     app.currentLayer.addShape(curve);
-                    area.drawCurve(p1, p2, p3, p4); // Draw curve on canvas
+                    area.drawCurve(p1, p2, p3, p4);
                 } else {
                     ErrorMessage.INVALID_PARAMETERS.printMessage();
                     System.out.println("Expected format: curve {x1} {y1} {x2} {y2} {x3} {y3} {x4} {y4}");
@@ -278,14 +278,14 @@ public class Command {
                 break;
 
             case "polygon":
-                if (this.intParams.size() >= 4 && this.intParams.size() % 2 == 0) { // Ensure correct parameter count
+                if (this.intParams.size() >= 4 && this.intParams.size() % 2 == 0) {
                     ArrayList<Point> points = new ArrayList<>();
                     for (int i = 0; i < this.intParams.size(); i += 2) {
                         points.add(new Point(this.intParams.get(i), this.intParams.get(i + 1)));
                     }
                     Polygon polygon = new Polygon(points);
                     app.currentLayer.addShape(polygon);
-                    area.drawPolygon(points); // Draw polygon on canvas
+                    area.drawPolygon(points);
                 } else {
                     ErrorMessage.INVALID_PARAMETERS.printMessage();
                     System.out.println("Expected format: polygon {x1} {y1} {x2} {y2} ...");
@@ -322,9 +322,9 @@ public class Command {
                 break;
 
             case "select":
-                if (this.strParams.size() == 2 && this.intParams.size() == 1) { // Ensure correct parameter counts
+                if (this.strParams.size() == 2 && this.intParams.size() == 1) {
                     String target = this.strParams.get(1);
-                    int id = this.intParams.get(0); // Correctly access the ID from intParams
+                    int id = this.intParams.get(0);
                     switch (target) {
                         case "area":
                             boolean areaFound = false;
@@ -365,9 +365,9 @@ public class Command {
                 break;
 
             case "delete":
-                if (this.strParams.size() == 2 && this.intParams.size() == 1) { // Ensure correct parameter count
+                if (this.strParams.size() == 2 && this.intParams.size() == 1) {
                     String target = this.strParams.get(1);
-                    int id = this.intParams.get(0); // Correctly access the ID from intParams
+                    int id = this.intParams.get(0);
                     switch (target) {
                         case "area":
                             app.getAreas().removeIf(a -> a.getId() == id);
@@ -417,11 +417,10 @@ public class Command {
                 break;
 
             case "set":
-                if (this.strParams.size() == 3 && this.intParams.size() == 1) { // Ensure correct parameter counts
+                if (this.strParams.size() == 3 && this.intParams.size() == 1) {
                     String target = this.strParams.get(2);
-                    int asciiCode = this.intParams.get(0); // Access the ASCII code from intParams
+                    int asciiCode = this.intParams.get(0);
 
-                    // Validate ASCII code for printable characters (32 to 126)
                     if (asciiCode < 32 || asciiCode > 126) {
                         ErrorMessage.INVALID_PARAMETERS.printMessage();
                         System.out.println("ASCII code must be between 32 and 126 for printable characters.");
@@ -429,7 +428,7 @@ public class Command {
                         break;
                     }
 
-                    char newChar = (char) asciiCode; // Convert ASCII code to character
+                    char newChar = (char) asciiCode;
                     switch (target) {
                         case "background":
                             area.setEmptyChar(newChar);
@@ -450,13 +449,13 @@ public class Command {
                 break;
 
             default:
-                System.out.println("Commande inconnue"); // Simplified unknown command handling
-                shouldDrawCanvas = false; // Prevent canvas drawing
+                System.out.println("Commande inconnue");
+                shouldDrawCanvas = false;
                 break;
         }
 
         if (shouldDrawCanvas) {
-            app.currentArea.draw(); // Ensure canvas is displayed only when needed
+            app.currentArea.draw();
         }
     }
 }
